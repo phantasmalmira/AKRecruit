@@ -4,7 +4,7 @@
 This script takes your available tags and finds whether you have a guaranteed recruitment or not
 
 **Run it online**
-[![Run on Repl.it](https://repl.it/badge/github/phantasmalmira/AKRecruit)](https://akrecruit.miraphantasmal.repl.run/)
+[![Run on Repl.it](https://repl.it/badge/github/phantasmalmira/AKRecruit)](https://repl.it/@MiraPhantasmal/AKRecruit)
 
 # Why another calculator?
 
