@@ -86,19 +86,18 @@ class Recruit(object):
         
     def get_available_tags(self):
         selected = None
-        _qualification = [qual.upper() for qual in self.qualification]
-        _position = [pos.upper() for pos in self.position]
-        _classes = [clas.upper() for clas in self.classes]
-        _affix = [affx.upper() for affx in self.affix]
         while selected != '':
             os.system('cls' if os.name == 'nt' else 'clear')
             print(Color.UNDERLINE + Color.HEAD['TURQUOISE'] + 'Arknights Recruitment Sheet' + Color.END)
             self.display_tags()
             print(Color.HEAD['BRIGHT_RED'] + 'Leave empty to stop entering' + Color.END)
             selected = input(Color.HEAD['PALE_YELLOW'] + 'Enter tag > ' + Color.END)
-            if selected != '' and (selected.upper() in _qualification or selected.upper() in _position or selected.upper() in _classes or selected.upper() in _affix):
-                if selected not in self.tags:
+            if selected != '':
+                selected = self.fuzzy_detection(selected)
+                if selected and selected.upper() not in self.tags:
                     self.tags.append(selected.upper())
+                elif not selected:
+                    continue
                 else:
                     self.tags.remove(selected.upper())
 
@@ -117,6 +116,28 @@ class Recruit(object):
     def run(self):
         self.get_available_tags()
         self.check_obtainable_wrapper()
+
+    def fuzzy_detection(self, tag):
+        _qualification = [qual.upper() for qual in self.qualification]
+        _position = [pos.upper() for pos in self.position]
+        _classes = [clas.upper() for clas in self.classes]
+        _affix = [affx.upper() for affx in self.affix]
+        if tag.upper() in _qualification or tag.upper() in _position or tag.upper() in _classes or tag.upper() in _affix:
+            return tag
+        elif len(tag) >= 3:
+            for index in range(len(_qualification)):
+                if tag.upper() in _qualification[index]:
+                    return self.qualification[index]
+            for index in range(len(_position)):
+                if tag.upper() in _position[index]:
+                    return self.position[index]
+            for index in range(len(_classes)):
+                if tag.upper() in _classes[index]:
+                    return self.classes[index]
+            for index in range(len(_affix)):
+                if tag.upper() in _affix[index]:
+                    return self.affix[index]
+        return None
 
 
 class Color(object):
