@@ -25,7 +25,27 @@ class Recruit(object):
             'Defense, DPS': 'Liskarm, Vulcan',
             'AOE, Debuff': 'Meteorite',
             'DPS, Shift': 'Cliffheart',
-            'Shift, Defense': 'Croissant'
+            'Shift, Defense': 'Croissant',
+            'Guard, AOE': 'Specter, Estelle',
+            'Guard, Slow': 'Frostleaf',
+            'Defender, Healing': 'Nearl, Gummy',
+            'Sniper, Survival': 'Jessica',
+            'Sniper, Slow': 'ShiraYuki',
+            'Sniper, AOE': 'Meteorite, ShiraYuki',
+            'Special': 'Projekt Red, Manticore, Cliffheart, FEater, Gravel, Rope, Shaw',
+            'Shift': 'Cliffheart, FEater, Croissant, Rope, Shaw',
+            'Debuff': 'Meteorite, Pramanix, Haze, Meteor',
+            'Fast-Redeploy': 'Projekt Red, Gravel',
+            'AOE, Melee': 'Specter, Estelle',
+            'AOE, Survival': 'Specter, Estelle',
+            'Melee, Slow': 'FEater, Frostleaf',
+            'Slow, DPS': 'Istina, Frostleaf',
+            'Defense, Healing': 'Nearl, Gummy',
+            'Melee, Healing': 'Nearl, Gummy',
+            'Survival, Ranged': 'Jesicca',
+            'AOE, Slow': 'ShiraYuki',
+            'DPS, Support': 'Doberman',
+            'Support': '(>= 4 Hours)[Zima, Ptilopsis, Warfarin, Doberman]'
                     }
         self.qualification = ['Starter', 'Senior Operator', 'Top Operator']
         self.position = ['Melee', 'Ranged']
@@ -43,7 +63,7 @@ class Recruit(object):
         matches = 0
         for a_tag in available_tags:
             for o_tag in operator_tags:
-                if a_tag == o_tag:
+                if a_tag == o_tag.upper():
                     matches += 1
         if matches >= len(operator_tags):
             return True
@@ -52,31 +72,35 @@ class Recruit(object):
     def display_tags(self):
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Qualifications' + Color.END)
         for index in range(len(self.qualification)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.qualification[index] not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.qualification[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.qualification) != 5 else ' | ')
+            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.qualification[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.qualification[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.qualification) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Position' + Color.END)
         for index in range(len(self.position)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.position[index] not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.position[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.position) != 5 else ' | ')
+            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.position[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.position[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.position) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Classes' + Color.END)
         for index in range(len(self.classes)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.classes[index] not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.classes[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.classes) != 5 else ' | ')
+            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.classes[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.classes[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.classes) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Affixes' + Color.END)
         for index in range(len(self.affix)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.affix[index] not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.affix[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.affix) != 5 else ' | ')
+            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.affix[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.affix[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.affix) != 5 else ' | ')
         print('\n\n')
         
     def get_available_tags(self):
         selected = None
+        _qualification = [qual.upper() for qual in self.qualification]
+        _position = [pos.upper() for pos in self.position]
+        _classes = [clas.upper() for clas in self.classes]
+        _affix = [affx.upper() for affx in self.affix]
         while selected != '':
             os.system('cls' if os.name == 'nt' else 'clear')
             print(Color.UNDERLINE + Color.HEAD['TURQUOISE'] + 'Arknights Recruitment Sheet' + Color.END)
             self.display_tags()
             print(Color.HEAD['BRIGHT_RED'] + 'Leave empty to stop entering' + Color.END)
             selected = input(Color.HEAD['PALE_YELLOW'] + 'Enter tag > ' + Color.END)
-            if selected != '' and (selected in self.qualification or selected in self.position or selected in self.classes or selected in self.affix):
+            if selected != '' and (selected.upper() in _qualification or selected.upper() in _position or selected.upper() in _classes or selected.upper() in _affix):
                 if selected not in self.tags:
-                    self.tags.append(selected)
+                    self.tags.append(selected.upper())
                 else:
-                    self.tags.remove(selected)
+                    self.tags.remove(selected.upper())
 
     def check_obtainable_wrapper(self):
         valid_obtainable = False
@@ -89,6 +113,10 @@ class Recruit(object):
                     valid_obtainable = True
         if not valid_obtainable:
             print(Color.HEAD['BRIGHT_RED'] + 'NONE' + Color.END)
+
+    def run(self):
+        self.get_available_tags()
+        self.check_obtainable_wrapper()
 
 
 class Color(object):
@@ -106,9 +134,7 @@ class Color(object):
 
 def main():
     while True:
-        obj = Recruit()
-        obj.get_available_tags()
-        obj.check_obtainable_wrapper()
+        Recruit().run()
         print('\n\n')
         while True:
             exiting = input(Color.HEAD['PALE_YELLOW'] + 'Continue? (Y/N)' + Color.END + Color.HEAD['TURQUOISE'] + ' -> ' + Color.END + Color.HEAD['BRIGHT_RED'])
@@ -121,4 +147,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
