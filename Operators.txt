@@ -1,0 +1,81 @@
+# 6* Operators
+Siege = Melee, DP-Recovery, DPS, Top Operator, Vanguard
+Shining = Ranged, Support, Healing, Top Operator, Medic
+Nightingale = Ranged, Healing, Support, Top Operator, Medic
+Ifrit = Ranged, AoE, Debuff, Top Operator, Caster
+Exusiai = Ranged, DPS, Top Operator, Sniper
+SilverAsh = Melee, DPS, Support, Top Operator, Guard
+Hoshiguma = Melee, DPS, Defense, Top Operator, Defender
+
+# 5* Operators
+Texas = Crowd Control, Melee, DP-Recovery, Senior Operator, Vanguard
+Zima = Support, Melee, DP-Recovery, Senior Operator, Vanguard
+Ptilopsis = Ranged, Healing, Support, Senior Operator, Medic
+Silence = Ranged, Healing, Senior Operator, Medic
+Warfarin = Ranged, Healing, Support, Senior Operator, Medic
+Projekt Red = Melee, Crowd Control, Fast-Redeploy, Senior Operator, Specialist
+Manticore = Survival, Melee, DPS, Senior Operator, Specialist
+Cliffheart = DPS, Melee, Shift, Senior Operator, Specialist
+FEater = Slow, Melee, Shift, Senior Operator, Specialist
+Provence = Ranged, DPS, Senior Operator, Sniper
+Blue Poison = Ranged, DPS, Senior Operator, Sniper
+Firewatch = Ranged, DPS, Nuker, Senior Operator, Sniper
+Meteorite = Ranged, AoE, Debuff, Senior Operator, Sniper
+Platinum = Ranged, DPS, Senior Operator, Sniper
+Pramanix = Ranged, Debuff, Senior Operator, Supporter
+Istina = Ranged, Slow, DPS, Senior Operator, Supporter
+Mayer = Ranged, Summon, Crowd Control, Senior Operator, Supporter
+Specter = Melee, AoE, Survival, Senior Operator, Guard
+Indra = Melee, DPS, Survival, Senior Operator, Guard, Exclusive
+Nearl = Melee, Defense, Healing, Senior Operator, Defender
+Liskarm = Melee, Defense, DPS, Senior Operator, Defender
+Vulcan = Melee, DPS, Defense, Survival, Senior Operator, Defender, Exclusive
+Croissant = Melee, Shift, Defense, Senior Operator, Defender
+
+# 4* Operators
+Scavenger = Melee, DP-Recovery, DPS, Vanguard
+Vigna = Melee, DPS, DP-Recovery, Vanguard
+Gravel = Melee, Fast-Redeploy, Defense, Specialist
+Shaw = Melee, Shift, Specialist
+Rope = Melee, Shift, Specialist
+Haze = Debuff, Ranged, DPS, Caster
+Meteor = Ranged, DPS, Debuff, Sniper
+Cuora = Melee, Defense, Defender
+Gum = Melee, Defense, Healing, Defender
+Matterhorn = Melee, Defense, Defender
+Jessica = Ranged, DPS, Survival, Sniper
+Estelle = Melee, AoE, Survival, Guard, Exclusive
+Matoimaru = DPS, Melee, Survival, Guard
+ShiraYuki = Ranged, AoE, Slow, Sniper
+Earthspirit = Ranged, Slow, Supporter
+Frostleaf = Melee, Slow, DPS, Guard
+Gitano = Ranged, AoE, Caster
+Dobermann = Melee, Support, DPS, Guard
+Mousse = Melee, DPS, Guard
+Myrrh = Ranged, Healing, Medic
+Perfumer = Ranged, Healing, Medic
+
+# 3* Operators
+Fang = Melee, DP-Recovery, Vanguard
+Vanilla = Melee, DP-Recovery, Vanguard
+Plume = Melee, DP-Recovery, Vanguard, DPS
+Beagle = Melee, Defense, Defender
+Melantha = Melee, DPS, Survival, Guard
+Orchid = Ranged, Slow, Supporter
+Lava = Ranged, AoE, Caster
+Steward = Ranged, DPS, Caster
+Kroos = Ranged, DPS, Sniper
+Adnachiel = Ranged, DPS, Sniper, Exclusive
+Hibiscus = Ranged, Healing, Medic
+Ansel = Ranged, Healing, Medic
+
+# 2* Operators
+Yato = Melee, Starter, Vanguard, Exclusive
+Durin = Ranged, Starter, Caster, Exclusive
+12F = Ranged, Starter, Caster, Exclusive
+Rangers = Ranged, Starter, Sniper, Exclusive
+Noir Corne = Melee, Starter, Defender, Exclusive
+
+# 1* Operators
+Castle-3 = Melee, Support, Robot, Guard, Exclusive
+Lancet-2 = Ranged, Healing, Robot, Medic, Exclusive

@@ -1,71 +1,48 @@
 import os
+from operator import attrgetter
+from itertools import combinations
 
 class Recruit(object):
     def __init__(self):
-        self.operators = {
-            'Top Operator': 'Any Recruitable 6*',
-            'Senior Operator': 'Any Recruitable 5*',
-            'Medic, Support': 'Ptilopsis, Warfarin',
-            'Vanguard, Support': 'Zima',
-            'Defender, Survival': 'Vulcan',
-            'Defender, DPS': 'Liskarm, Vulcan',
-            'Defender, Shift': 'Croissant',
-            'Supporter, DPS': 'Istina',
-            'Supporter, Debuff': 'Pramanix',
-            'Special, Slow': 'FEater',
-            'Special, Survival': 'Manticore',
-            'Special, DPS': 'Manticore, Cliffheart',
-            'Summon': 'Mayer',
-            'Nuker': 'Firewatch',
-            'Crowd-Control': 'Texas, Projekt Red, Mayer',
-            'Ranged, Support': 'Ptilopsis, Warfarin',
-            'Healing, Support': 'Ptilopsis, Warfarin',
-            'DP-Recovery, Support': 'Zima',
-            'Defense, Survival': 'Vulcan',
-            'Defense, DPS': 'Liskarm, Vulcan',
-            'AOE, Debuff': 'Meteorite',
-            'DPS, Shift': 'Cliffheart',
-            'Shift, Defense': 'Croissant',
-            'Guard, AOE': 'Specter, Estelle',
-            'Guard, Slow': 'Frostleaf',
-            'Defender, Healing': 'Nearl, Gummy',
-            'Sniper, Survival': 'Jessica',
-            'Sniper, Slow': 'ShiraYuki',
-            'Sniper, AOE': 'Meteorite, ShiraYuki',
-            'Special': 'Projekt Red, Manticore, Cliffheart, FEater, Gravel, Rope, Shaw',
-            'Shift': 'Cliffheart, FEater, Croissant, Rope, Shaw',
-            'Debuff': 'Meteorite, Pramanix, Haze, Meteor',
-            'Fast-Redeploy': 'Projekt Red, Gravel',
-            'AOE, Melee': 'Specter, Estelle',
-            'AOE, Survival': 'Specter, Estelle',
-            'Melee, Slow': 'FEater, Frostleaf',
-            'Slow, DPS': 'Istina, Frostleaf',
-            'Defense, Healing': 'Nearl, Gummy',
-            'Melee, Healing': 'Nearl, Gummy',
-            'Survival, Ranged': 'Jesicca',
-            'AOE, Slow': 'ShiraYuki',
-            'DPS, Support': 'Doberman',
-            'Support': '(>= 4 Hours)[Zima, Ptilopsis, Warfarin, Doberman]'
-                    }
+        self.operators = []
+        self.operator_file = 'Operators.txt'
         self.qualification = ['Starter', 'Senior Operator', 'Top Operator']
         self.position = ['Melee', 'Ranged']
-        self.classes = ['Vanguard', 'Medic', 'Guard', 'Supporter', 'Caster', 'Defender', 'Sniper', 'Special']
+        self.classes = ['Vanguard', 'Medic', 'Guard', 'Supporter', 'Caster', 'Defender', 'Sniper', 'Specialist']
         self.affix = [
         'Debuff', 'Support', 'Slow', 'DPS', 
         'Healing', 'DP-Recovery', 'Survival', 
-        'Defense', 'AOE', 'Fast-Redeploy', 'Shift', 
-        'Summon', 'Crowd-Control', 'Nuker', 'Robot'
+        'Defense', 'AoE', 'Fast-Redeploy', 'Shift', 
+        'Summon', 'Crowd Control', 'Nuker', 'Robot'
                 ]
         self.tags = []
+        self.obtainables = []
+
+    def read_as_dict(self):
+        with open(self.operator_file) as f:
+            lines = f.readlines()
+        rarity = 0
+        for line in lines:
+            if '# ' in line:
+                rarity = line[2]
+            if not (line[0] == '#' or line[0] == '\n'):
+                line = line.strip()
+                temp = line.split(' = ')
+                operator_name = temp[0]
+                operator_tags = temp[1].split(', ')
+                operator_exclusive = False
+                if 'Exclusive' in operator_tags:
+                    operator_exclusive = True
+                    operator_tags.remove('Exclusive')
+                self.operators.append(Operator(operator_name, operator_tags, rarity, operator_exclusive))
 
     @staticmethod
     def check_obtainable(operator_tags, available_tags):
         matches = 0
-        for a_tag in available_tags:
-            for o_tag in operator_tags:
-                if a_tag == o_tag.upper():
-                    matches += 1
-        if matches >= len(operator_tags):
+        for index in range(len(available_tags)):
+            if available_tags[index] in [x.upper() for x in operator_tags]:
+                matches += 1
+        if matches == len(available_tags):
             return True
         return False
 
@@ -102,16 +79,22 @@ class Recruit(object):
                     self.tags.remove(selected.upper())
 
     def check_obtainable_wrapper(self):
-        valid_obtainable = False
         print('\n\n'+ Color.UNDERLINE + Color.HEAD['BRIGHT_BLUE'] + 'Obtainables' + Color.END)
-        for key, value in self.operators.items():
-            key_list = key.split(', ')
-            if self.check_obtainable(key_list, self.tags):
-                print(Color.HEAD['BRIGHT_GREEN'] + key + Color.END + Color.HEAD['PALE_YELLOW'] + ' -> ' + Color.END + Color.HEAD['TURQUOISE'] + value + Color.END)
-                if not valid_obtainable:
-                    valid_obtainable = True
-        if not valid_obtainable:
-            print(Color.HEAD['BRIGHT_RED'] + 'NONE' + Color.END)
+        self.read_as_dict()
+        
+        for index in range(3, 0, -1):
+            for subset in combinations(self.tags, index):
+                obtainable_operator = []
+                for operator in self.operators:
+                    if self.check_obtainable(operator.tags, list(subset)):
+                        obtainable_operator.append(operator)
+                if obtainable_operator:
+                    self.obtainables.append((subset, obtainable_operator))
+        
+        self.obtainables.sort(key=lambda x: len(x[-1]))
+
+        for obtainable in self.obtainables:
+            print('{} {} {}'.format(Color.HEAD['TURQUOISE'] + ', '.join(obtainable[0]) + Color.END, Color.HEAD['PALE_YELLOW'] + ' -> ' + Color.END, Color.HEAD['BRIGHT_GREEN'] + ''.join([x.name + ' {}({}*{}{}{}){}{}'.format(Color.HEAD['BRIGHT_RED'], x.rarity, Color.HEAD['PALE_YELLOW'], 'EX' if x.exclusive else '', Color.HEAD['BRIGHT_RED'], Color.HEAD['BRIGHT_GREEN'], '\n' if (obtainable[1].index(x) + 1) % 5 == 0 and obtainable[1].index(x) != 0 else ', ' if obtainable[1].index(x) != (len(obtainable[1]) - 1) else '') for x in obtainable[1]]) + Color.END))
 
     def run(self):
         self.get_available_tags()
@@ -152,6 +135,14 @@ class Color(object):
     }
     UNDERLINE = '\033[4;37;40m'
     END = '\033[0m'
+
+class Operator(object):
+    def __init__(self, name, tags, rarity, exclusive=False):
+        self.name = name
+        self.tags = tags
+        self.rarity = rarity
+        self.exclusive = exclusive
+
 
 def main():
     while True:
