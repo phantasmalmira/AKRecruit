@@ -1,5 +1,5 @@
 import os
-from operator import attrgetter
+from operator import itemgetter
 from itertools import combinations
 
 class Recruit(object):
@@ -24,7 +24,7 @@ class Recruit(object):
         rarity = 0
         for line in lines:
             if '# ' in line:
-                rarity = line[2]
+                rarity = int(line[2])
             if not (line[0] == '#' or line[0] == '\n'):
                 line = line.strip()
                 temp = line.split(' = ')
@@ -42,23 +42,25 @@ class Recruit(object):
         for index in range(len(available_tags)):
             if available_tags[index] in [x.upper() for x in operator_tags]:
                 matches += 1
-        if matches == len(available_tags):
+        if 'TOP OPERATOR' in [x.upper() for x in operator_tags] and 'TOP OPERATOR' not in available_tags:
+            return False
+        elif matches == len(available_tags):
             return True
         return False
 
     def display_tags(self):
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Qualifications' + Color.END)
         for index in range(len(self.qualification)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.qualification[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.qualification[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.qualification) != 5 else ' | ')
+            print('{}{}'.format(Color.END, '| ' if index % 5 == 0 else ' ') + '{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.qualification[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.qualification[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.qualification) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Position' + Color.END)
         for index in range(len(self.position)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.position[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.position[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.position) != 5 else ' | ')
+            print('{}{}'.format(Color.END, '| ' if index % 5 == 0 else ' ') + '{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.position[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.position[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.position) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Classes' + Color.END)
         for index in range(len(self.classes)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.classes[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.classes[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.classes) != 5 else ' | ')
+            print('{}{}'.format(Color.END, '| ' if index % 5 == 0 else ' ') + '{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.classes[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.classes[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.classes) != 5 else ' | ')
         print('\n\n' + Color.UNDERLINE + Color.HEAD['BRIGHT_GREEN'] + 'Affixes' + Color.END)
         for index in range(len(self.affix)):
-            print('{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.affix[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.affix[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.affix) != 5 else ' | ')
+            print('{}{}'.format(Color.END, '| ' if index % 5 == 0 else ' ') + '{color}'.format(color=Color.HEAD['BRIGHT_BLUE'] if self.affix[index].upper() not in self.tags else Color.HEAD['PALE_YELLOW']) + '{:^15}'.format(self.affix[index]) + Color.END, end=' |\n' if (index + 1) % 5 == 0 and len(self.affix) != 5 else ' | ')
         print('\n\n')
         
     def get_available_tags(self):
@@ -79,7 +81,7 @@ class Recruit(object):
                     self.tags.remove(selected.upper())
 
     def check_obtainable_wrapper(self):
-        print('\n\n'+ Color.UNDERLINE + Color.HEAD['BRIGHT_BLUE'] + 'Obtainables' + Color.END)
+        print('\n\n'+ Color.UNDERLINE + Color.HEAD['BRIGHT_BLUE'] + 'Obtainables' + Color.END + ' : ' + Color.HEAD['PALE_YELLOW'] + 'Sorted by average rarity (EX=Exclusive to Recruiting)')
         self.read_as_dict()
         
         for index in range(3, 0, -1):
@@ -89,12 +91,17 @@ class Recruit(object):
                     if self.check_obtainable(operator.tags, list(subset)):
                         obtainable_operator.append(operator)
                 if obtainable_operator:
-                    self.obtainables.append((subset, obtainable_operator))
+                    average_rarity = sum([x.rarity for x in obtainable_operator]) / len(obtainable_operator)
+                    self.obtainables.append((subset, obtainable_operator, average_rarity))
         
-        self.obtainables.sort(key=lambda x: len(x[-1]))
+        self.obtainables.sort(key=itemgetter(2), reverse=True)
 
-        for obtainable in self.obtainables:
-            print('{} {} {}'.format(Color.HEAD['TURQUOISE'] + ', '.join(obtainable[0]) + Color.END, Color.HEAD['PALE_YELLOW'] + ' -> ' + Color.END, Color.HEAD['BRIGHT_GREEN'] + ''.join([x.name + ' {}({}*{}{}{}){}{}'.format(Color.HEAD['BRIGHT_RED'], x.rarity, Color.HEAD['PALE_YELLOW'], 'EX' if x.exclusive else '', Color.HEAD['BRIGHT_RED'], Color.HEAD['BRIGHT_GREEN'], '\n' if (obtainable[1].index(x) + 1) % 5 == 0 and obtainable[1].index(x) != 0 else ', ' if obtainable[1].index(x) != (len(obtainable[1]) - 1) else '') for x in obtainable[1]]) + Color.END))
+        for index in range(len(self.obtainables)):
+            print('\n' + '{}'.format(Color.UNDERLINE + Color.HEAD['TURQUOISE'] + ', '.join(self.obtainables[index][0]) + Color.END))
+            for index2 in range(len(self.obtainables[index][1])):
+                print('{}{}{}{:^33}'.format(Color.END, '| ' if index2 % 5 == 0 else ' ', Color.HEAD['BRIGHT_GREEN'], self.obtainables[index][1][index2].name + ' {}({}*{}{}{})'.format(Color.HEAD['BRIGHT_RED'], str(self.obtainables[index][1][index2].rarity), Color.HEAD['PALE_YELLOW'], 'EX' if self.obtainables[index][1][index2].exclusive else '', Color.HEAD['BRIGHT_RED'])) + Color.END, 
+                end=' |\n' if (index2 + 1) % 5 == 0 and index2 + 1 != len(self.obtainables[index][1]) else ' | ')
+            print()
 
     def run(self):
         self.get_available_tags()
